@@ -15,9 +15,13 @@ class Line:
     def __init__(self,A:Point = None,B:Point = None,a:float = None,b:float = None):
         self.a = a
         self.b = b
+        self.ax = False
         if A != None and B != None and (A.x-B.x) != 0:
             self.a = (A.y - B.y)/(A.x-B.x)
             self.b = A.y - self.a*A.x
+        elif (A.x-B.x) == 0:
+            self.ax = True
+            self.b = A.x
 
 class Plane:
     def __init__(self,a:float,b:float,c:float,d:float):
@@ -46,16 +50,23 @@ class Vector:
 #Вариант 4
 
 #1)На плоскости Определить принадлежит ли точка прямой. Прямая задана своими коэффициентами.
-def isPointOnLine(l:Line,p:Point):return p.y == l.a*p.x+l.b
+def isPointOnLine(l:Line,p:Point):
+    if not l.ax:
+        return p.y == l.a*p.x+l.b
+    else:
+        return p.b == p.x 
 
 #2)На плоскости Даны три точки А,В,С. Определить принадлежит ли точка С лучу АВ
-def isPointOnRay(A:Point,B:Point,C:Point):return isPointOnLine(Line(A,B),C)    
+def isPointOnRay(A:Point,B:Point,C:Point):
+    return isPointOnLine(Line(A,B),C)    
 
 #3)В пространстве Даны три точки А,В,С, определить является ли обход А-В-С обходом по часовой стрелке или против (точки заданы на плоскости).
-def isRightRotation(A:Point,B:Point,C:Point):return Vector(A,B).psmul(Vector(B,C)) < 0   
+def isRightRotation(A:Point,B:Point,C:Point):
+    return Vector(A,B).psmul(Vector(B,C)) < 0   
 
 #4)В пространстве Заданы коэффициенты уравнения плоскости и координаты точки. Определить принадлежит ли точка плоскости.
-def isPointOnPlane(P:Plane,A:Point):return P.a*A.x + P.b*A.y + P.c*A.z + P.d == 0
+def isPointOnPlane(P:Plane,A:Point):
+    return P.a*A.x + P.b*A.y + P.c*A.z + P.d == 0
 
 
 print("--------isPointOnLine(Line(1,0),Point(2,2))---------------------")
